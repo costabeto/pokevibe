@@ -1,21 +1,36 @@
 import React from 'react';
-import logo from './assets/img/pokelogo.webp';
+import { BrowserRouter } from 'react-router-dom';
 
-function App() {
+import { GlobalStyle } from './globalStyle';
+import { ThemeProvider } from 'styled-components';
+import Routes from './routes';
+
+import Header from './components/Header';
+
+const light = {
+  bgcolor: '#e6e6e6',
+  red: '#dc143c',
+  white: '#e6e6e6',
+  font: 'src/assets/fonts/retroGame.ttf',
+};
+
+// const dark = {
+//   bgcolor: '#3f3f3f',
+//   red: '#dc143c',
+//   white: '#e6e6e6',
+//   font: 'src/assets/fonts/retroGame.ttf',
+// };
+
+const App = () => {
   return (
-    <div
-      className='App'
-      style={{
-        display: 'flex',
-        width: '100vw',
-        height: '100vh',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <img src={logo} className='App-logo' alt='logo' />
-    </div>
+    <ThemeProvider theme={light}>
+      <GlobalStyle />
+      <BrowserRouter>
+        <Header />
+        <Routes />
+      </BrowserRouter>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
