@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { FiMenu, FiX } from 'react-icons/fi';
-import { Container, MenuButton, Menu, MenuItem } from './styles';
+import { FiMenu, FiX, FiSun, FiMoon } from 'react-icons/fi';
+import { Container, MenuButton, Menu, MenuItem, ThemeButton } from './styles';
 import { useSpring } from 'react-spring';
 import { useLocation } from 'react-router-dom';
 
-const Header = () => {
+const Header = ({ onThemeChange = () => {}, theme }) => {
   const [menu, setMenu] = useState(false);
 
   const location = useLocation();
@@ -20,6 +20,9 @@ const Header = () => {
   return (
     <>
       <Container>
+        <ThemeButton onClick={() => onThemeChange(!theme)}>
+          {theme ? <FiSun /> : <FiMoon />}
+        </ThemeButton>
         <h1>PokéVibe</h1>
         <MenuButton onClick={() => setMenu(!menu)}>
           {menu ? <FiX /> : <FiMenu />}

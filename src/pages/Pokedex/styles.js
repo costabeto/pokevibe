@@ -1,30 +1,6 @@
 import styled from 'styled-components';
 
-const types = {
-  normal: 'background-color: #bfbfbf',
-  fighting: 'background-color: #d87c58',
-  flying: 'background-color: #999ade',
-  poison: 'background-color: #925192',
-  ground: 'background-color: #dea761',
-  rock: 'background-color: #897864',
-  bug: 'background-color: #b1c967',
-  ghost: 'background-color: #c195dc',
-  steel: 'background-color: #49769c',
-  fire: 'background-color: #cf1414',
-  water: 'background-color: #1689de',
-  grass: 'background-color: #47a047',
-  electric: 'background-color: #e6b700',
-  psychic: 'background-color: #fa43b8',
-  ice: 'background-color: #98c3de',
-  dragon: 'background-color: #89315d',
-  dark: 'background-color: #282433',
-  fairy: 'background-color: #dca0ce',
-  unknown: 'background-color: #545454',
-  shadow: 'background-color: #364163',
-};
-
 export const Container = styled.div`
-  background-color: ${(props) => props.theme.bgcolor};
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -105,6 +81,8 @@ export const Type = styled.div`
 
   padding: 4px 10px;
   border-radius: 5%;
-  color: ${(props) => props.theme.white};
-  ${(props) => types[props.type || 'normal']}
+  color: ${(props) => props.theme.primary};
+  ${(props) => {
+    return props.theme.types[props.type || 'normal'];
+  }}
 `;

@@ -16,7 +16,7 @@ export const Container = styled.div`
   margin: 0px;
   padding: 16px;
 
-  color: ${(props) => props.theme.white};
+  color: ${(props) => props.theme.primary};
   background-color: ${(props) => props.theme.red};
 
   box-shadow: 2px -4px 21px 14px rgba(0, 0, 0, 0.84);
@@ -27,6 +27,7 @@ export const Container = styled.div`
     font-size: 1.3rem;
     margin: 0px;
     width: 100%;
+    color: ${(props) => props.theme.primary};
     text-align: center;
   }
 `;
@@ -39,7 +40,8 @@ export const MenuButton = styled.button`
   right: 20px;
 
   svg {
-    color: white;
+    color: ${(props) => props.theme.primary};
+
     font-size: 24px;
   }
 `;
@@ -73,5 +75,19 @@ export const MenuItem = styled(Link)`
 
   &:hover {
     background-color: ${(props) => darken(0.2, props.theme.red)};
+  }
+`;
+
+export const ThemeButton = styled.button`
+  background: transparent;
+  border: none;
+
+  position: absolute;
+  left: 20px;
+
+  svg {
+    color: ${(props) => props.theme.primary};
+
+    font-size: 24px;
   }
 `;

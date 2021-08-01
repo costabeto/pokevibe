@@ -18,8 +18,9 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0px;
     padding: 0px;
     width: 100vw;
+    color: ${(props) => props.theme.secondary};
     background-color: ${(props) =>
-      (props.theme && props.theme.bgcolor) || 'gray'};    
+      (props.theme && props.theme.primary) || 'gray'};    
   }
 
 `;
