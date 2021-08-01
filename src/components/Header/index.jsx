@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { Container, MenuButton, Menu, MenuItem } from './styles';
 import { useSpring } from 'react-spring';
+import { useLocation } from 'react-router-dom';
 
 const Header = () => {
   const [menu, setMenu] = useState(false);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    setMenu(false);
+  }, [location.pathname]);
 
   const fade = useSpring({
     opacity: menu ? 1 : 0,

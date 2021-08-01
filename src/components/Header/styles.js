@@ -11,6 +11,7 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  z-index: 1;
 
   margin: 0px;
   padding: 16px;
