@@ -28,10 +28,12 @@ const Header = ({ onThemeChange = () => {}, theme }) => {
           {menu ? <FiX /> : <FiMenu />}
         </MenuButton>
       </Container>
-      <Menu style={fade}>
-        <MenuItem to='/'>Home</MenuItem>
-        <MenuItem to='/pokedex'>Pokédex</MenuItem>
-      </Menu>
+      {menu && (
+        <Menu style={fade}>
+          <MenuItem to='/'>Home</MenuItem>
+          <MenuItem to='/pokedex'>Pokédex</MenuItem>
+        </Menu>
+      )}
     </>
   );
 };
