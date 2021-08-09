@@ -13,6 +13,9 @@ import { useParams, useHistory } from 'react-router-dom';
 import pokeapi from '../../services/pokeapi';
 import { FiChevronLeft } from 'react-icons/fi';
 
+import Stats from './components/Stats';
+import { capitalize } from '../../utils/formatting';
+
 const Pokemon = () => {
   const params = useParams();
   const history = useHistory();
@@ -30,6 +33,39 @@ const Pokemon = () => {
     return validName;
   }, [history, params]);
 
+  function pokemonFormatting(data) {
+    const { id, sprites, height, weight, base_experience } = data;
+
+    const name = capitalize(data.name);
+
+    const types = data.types.map((t) => {
+      t.name = capitalize(t.type.name);
+      t.label = t.type.name;
+
+      return t;
+    });
+
+    const stats = data.stats.map((s) => {
+      const name = capitalize(s.stat.name);
+
+      return { name, value: s.base_stat };
+    });
+
+    const abilities = data.abilities.map((a) => a.ability.name);
+
+    return {
+      stats,
+      types,
+      name,
+      id,
+      sprites,
+      height,
+      weight,
+      abilities,
+      base_experience,
+    };
+  }
+
   useEffect(() => {
     const localPokemons = JSON.parse(
       localStorage.getItem('@pokevibe-pokemons-cache') || '[]'
@@ -38,7 +74,7 @@ const Pokemon = () => {
     const [result] = localPokemons.filter((p) => p.name === name);
 
     if (result) {
-      setPokemon(result);
+      setPokemon(pokemonFormatting(result));
     } else {
       pokeapi
         .get(`https://pokeapi.co/api/v2/pokemon/${name}`)
@@ -52,24 +88,14 @@ const Pokemon = () => {
             JSON.stringify(newLocalPokemons)
           );
 
-          setPokemon(data);
+          setPokemon(pokemonFormatting(data));
         });
     }
   }, [name]);
 
-  const mainType = useMemo(() => {
-    if (pokemon) {
-      const [type] = pokemon.types;
-
-      return type.type.name;
-    }
-
-    return 'normal';
-  }, [pokemon]);
-
   return (
     pokemon && (
-      <Container type={mainType}>
+      <Container>
         <Header>
           <GoBack onClick={() => history.goBack()}>
             <FiChevronLeft />
@@ -85,25 +111,23 @@ const Pokemon = () => {
         />
         <Types>
           {pokemon.types.map((t) => (
-            <Type key={t.type.name} type={t.type.name}>
-              {t.type.name}
+            <Type key={t.label} type={t.label}>
+              {t.name}
             </Type>
           ))}
         </Types>
+
+        <Stats data={pokemon.stats} />
+
         <div>
           {pokemon.height} M - {pokemon.weight} KG
         </div>
-        <div>base experience: {pokemon.base_experience}</div>
-        <div>Types</div>
-        <div>Stats</div>
-        {pokemon.stats.map((s) => (
-          <p key={s.stat.name}>
-            {s.stat.name}: {s.base_stat}
-          </p>
-        ))}
+
+        <div>Base Experience: {pokemon.base_experience}</div>
+
         <div>Abilities</div>
         {pokemon.abilities.map((a) => (
-          <p key={a.ability.name}>{a.ability.name}</p>
+          <p key={a}>{a}</p>
         ))}
       </Container>
     )

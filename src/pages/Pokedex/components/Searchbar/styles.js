@@ -57,6 +57,8 @@ export const ResultItem = styled.button`
   border: none;
   background: transparent;
   text-align: left;
+  color: ${(props) => props.theme.secondary};
+
   & + & {
     border-top: 1px solid ${(props) => lighten(0.4, props.theme.secondary)};
   }
