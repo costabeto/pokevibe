@@ -1,30 +1,30 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
+import { FiChevronLeft } from 'react-icons/fi';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
+import pokeapi from '../../services/pokeapi';
+import { addVisited, getVisited } from '../../store/slices/visitedSlice';
+import { capitalize } from '../../utils/formatting';
+import Stats from './components/Stats';
 import {
   Container,
   GoBack,
   Header,
-  PokeId,
   Image,
   Name,
+  PokeId,
   Type,
   Types,
 } from './styles';
-import { useParams, useHistory } from 'react-router-dom';
-import pokeapi from '../../services/pokeapi';
-import { FiChevronLeft } from 'react-icons/fi';
-
-import Stats from './components/Stats';
-import { capitalize } from '../../utils/formatting';
 
 const Pokemon = () => {
   const params = useParams();
   const history = useHistory();
-  const [pokemon, setPokemon] = useState(null);
 
-  const name = useMemo(() => {
-    const { id } = params;
+  const urlName = useMemo(() => {
+    const { name } = params;
 
-    const validName = String(id);
+    const validName = String(name);
 
     if (!validName) {
       history.goBack();
@@ -66,32 +66,19 @@ const Pokemon = () => {
     };
   }
 
+  const dispatch = useDispatch();
+
+  const pokemon = useSelector(getVisited(urlName));
+
   useEffect(() => {
-    const localPokemons = JSON.parse(
-      localStorage.getItem('@pokevibe-pokemons-cache') || '[]'
-    );
-
-    const [result] = localPokemons.filter((p) => p.name === name);
-
-    if (result) {
-      setPokemon(pokemonFormatting(result));
-    } else {
+    if (!pokemon) {
       pokeapi
-        .get(`https://pokeapi.co/api/v2/pokemon/${name}`)
-        .then((response) => {
-          const { data } = response;
-
-          const newLocalPokemons = [...localPokemons, data];
-
-          localStorage.setItem(
-            '@pokevibe-pokemons-cache',
-            JSON.stringify(newLocalPokemons)
-          );
-
-          setPokemon(pokemonFormatting(data));
-        });
+        .get(`https://pokeapi.co/api/v2/pokemon/${urlName}`)
+        .then((response) =>
+          dispatch(addVisited(pokemonFormatting(response.data)))
+        );
     }
-  }, [name]);
+  }, [dispatch, pokemon, urlName]);
 
   return (
     pokemon && (

@@ -1,51 +1,35 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import pokeapi from '../../../../services/pokeapi';
+import { getNames, setNames } from '../../../../store/slices/namesSlice';
 import {
   Container,
-  Input,
-  Results,
-  ResultItem,
-  ResultCount,
   Header,
+  Input,
+  ResultCount,
+  ResultItem,
+  Results,
 } from './styles';
-import pokeapi from '../../../../services/pokeapi';
-
-import { useHistory } from 'react-router-dom';
 
 const Searchbar = () => {
-  const [pokemonList, setPokemonList] = useState([]);
   const [search, setSearch] = useState('');
 
   const history = useHistory();
 
-  const fetchPokemons = useCallback(() => {
-    const localPokemons = localStorage.getItem('@pokevibe-pokemon-list');
-
-    if (!!localPokemons) {
-      const parsed = JSON.parse(localPokemons);
-      setPokemonList(parsed);
-    } else {
-      pokeapi
-        .get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=2000')
-        .then((response) => {
-          setPokemonList(response.data);
-          localStorage.setItem(
-            '@pokevibe-pokemon-list',
-            JSON.stringify(response.data)
-          );
-        });
-    }
-  }, []);
+  const dispatch = useDispatch();
+  const names = useSelector(getNames());
 
   useEffect(() => {
-    fetchPokemons();
-  }, [fetchPokemons]);
+    pokeapi.get('/pokemon/?offset=0&limit=2000').then((response) => {
+      dispatch(setNames(response.data.results));
+    });
+  }, [dispatch]);
 
-  function filterBySearch(list) {
-    if (!list) return [];
-    const { results } = list;
-    if (!results) return [];
-    return results.filter((p) => search && p.name.includes(search));
-  }
+  const filtered = useMemo(() => {
+    if (!names) return [];
+    return names.filter((p) => search && p.name.includes(search));
+  }, [names, search]);
 
   function onSelect(name) {
     history.push(`/pokemon/${name}`);
@@ -63,12 +47,11 @@ const Searchbar = () => {
         />
 
         <ResultCount>
-          {filterBySearch(pokemonList).length > 0 &&
-            `${filterBySearch(pokemonList).length} / ${pokemonList.count}`}
+          {filtered.length > 0 && `${filtered.length} / ${names.length}`}
         </ResultCount>
       </Header>
       <Results>
-        {filterBySearch(pokemonList).map((p) => (
+        {filtered.map((p) => (
           <ResultItem key={p.name} onClick={() => onSelect(p.name)}>
             {p.name}
           </ResultItem>

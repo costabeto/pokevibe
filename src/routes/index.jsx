@@ -9,7 +9,7 @@ const Routes = () => {
     <Switch>
       <Route exact path='/' component={Home} />
       <Route exact path='/pokedex' component={Pokedex} />
-      <Route exact path='/pokemon/:id' component={Pokemon} />
+      <Route exact path='/pokemon/:name' component={Pokemon} />
     </Switch>
   );
 };
